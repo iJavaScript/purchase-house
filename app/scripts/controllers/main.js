@@ -13,15 +13,14 @@
       angular.forEach(['initPay', 'qiTax', 'yingYeTax', 'geTax'], function (type) {
          result[type] = (price * inputs[type] / 100);
 
+         if (type === 'yingYeTax' && _useMarginYingYeTax(inputs.overFiveYear, normalHouse)) {
+            var ov = !!inputs.originalValue ? inputs.originalValue : 0;
+            result.yingYeTax = inputs.yingYeTax * (price - ov) / 100;
+         }
          if (type.match(/Tax$/)) {
             subTotal += result[type];
          }
       });
-
-      if (_useMarginYingYeTax(inputs.overFiveYear, inputs.normalHouse)) {
-         var ov = !!inputs.originalValue ? inputs.originalValue : 0;
-         result.yingYeTax = inputs.yingYeTax * (price - ov) / 100;
-      }
 
       result.middleManFee = inputs.price * inputs.middleManFee / 100;
       result.diff = !!normalHouse ? (inputs.price - inputs.normalHouseValue) : 0;
@@ -46,25 +45,21 @@
       return overFiveYear && !normalHouse;
    }
 
-
-
    angular.module('purchaseHouseApp')
       .controller('MainCtrl', function ($scope) {
 
          $scope.result = {};
 
          $scope.input = {};
-         //$scope.input.geTax = 2;
          $scope.input.middleManFee = 2;
          $scope.input.yingYeTax = 5.65;
          $scope.input.normalHouseValue = 160; // 普通住宅阙值
 
 
-         $scope.needShowOriginalValue = function () {
-            var inputs = $scope.input;
-            //return inputs.overFiveYear && !inputs.normalHouse;
-            return _useMarginYingYeTax(inputs.overFiveYear, inputs.normalHouse);
-         };
+         //$scope.needShowOriginalValue = function () {
+         //   var inputs = $scope.input;
+         //   return _useMarginYingYeTax(inputs.overFiveYear, inputs.normalHouse);
+         //};
 
          // TODO: watch the whole model?
          //
@@ -89,22 +84,19 @@
 
                if (!!inputs && inputs.price) {
 
-                  $scope.input.yingYeTax = inputs.yingYeTax = _doNotNeedYingYeTax(inputs.overFiveYear, inputs.normalHouse) ? 0 : 5.65;
-                  console.log(_doNotNeedYingYeTax(inputs.overFiveYear, inputs.normalHouse));
-
-                  $scope.result = cal(inputs.price, inputs);
+                  $scope.result = cal(inputs.price, inputs, false);
 
                   if (inputs.normalHouse) {
                      inputs.geTax = inputs.geTax > 0 ? 1 : 0; // 唯一房无需个税
+
+                     inputs.yingYeTax = _doNotNeedYingYeTax(inputs.overFiveYear, inputs.normalHouse) ? 0 : 5.65;
+
                      $scope.cheating = cal(inputs.normalHouseValue, inputs, inputs.normalHouse);
                   }
 
                }
             });
          });
-
-
-
 
          $scope.cal = function () {
             var result = {},
