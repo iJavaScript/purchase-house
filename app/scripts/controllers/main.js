@@ -7,7 +7,7 @@
       "3": { qiTax : 3, initPay: 100 }
    };
 
-   function cal (price, inputs, cheating) {
+   function cal (price, inputs, normalHouse) {
       var subTotal = 0,
           result = {};
       angular.forEach(['initPay', 'qiTax', 'yingYeTax', 'geTax'], function (type) {
@@ -18,8 +18,13 @@
          }
       });
 
+      if (_useMarginYingYeTax(inputs.overFiveYear, inputs.normalHouse)) {
+         var ov = !!inputs.originalValue ? inputs.originalValue : 0;
+         result.yingYeTax = inputs.yingYeTax * (price - ov) / 100;
+      }
+
       result.middleManFee = inputs.price * inputs.middleManFee / 100;
-      result.diff = !!cheating ? (inputs.price - inputs.cheatingValue) : 0;
+      result.diff = !!normalHouse ? (inputs.price - inputs.normalHouseValue) : 0;
       result.taxSubTotal = subTotal;
       result.firstPayTotal = result.initPay +
          subTotal +
@@ -33,16 +38,33 @@
    }
 
 
+   function _doNotNeedYingYeTax (overFiveYear, normalHouse) {
+      return !!overFiveYear && !! normalHouse;
+   }
+
+   function _useMarginYingYeTax (overFiveYear, normalHouse) {
+      return overFiveYear && !normalHouse;
+   }
+
+
+
    angular.module('purchaseHouseApp')
       .controller('MainCtrl', function ($scope) {
 
          $scope.result = {};
 
          $scope.input = {};
-         $scope.input.geTax = 2;
+         //$scope.input.geTax = 2;
          $scope.input.middleManFee = 2;
          $scope.input.yingYeTax = 5.65;
-         $scope.input.cheatingValue = 160; // 普通住宅阙值
+         $scope.input.normalHouseValue = 160; // 普通住宅阙值
+
+
+         $scope.needShowOriginalValue = function () {
+            var inputs = $scope.input;
+            //return inputs.overFiveYear && !inputs.normalHouse;
+            return _useMarginYingYeTax(inputs.overFiveYear, inputs.normalHouse);
+         };
 
          // TODO: watch the whole model?
          //
@@ -55,24 +77,26 @@
             }
          });
 
-         $scope.$watch('input.overFiveYear', function () {
-            //if ($scope.input && $scope.input.overFiveYear) {
-            //   $scope.input.yingYeTax = 0;
-            //} else {
-            //   $scope.input.yingYeTax = 5.65;
-            //}
+         $scope.$watch('input.onlyOneHouse', function () {
+            $scope.input.geTax = $scope.input.onlyOneHouse ? 0 : 2;
          });
 
-         angular.forEach(['input.price', 'input.initPay', 'input.qiTax', 'input.yingYeTax', 'input.geTax', 'input.middleManFee', 'input.cheating'], function (field) {
+         angular.forEach(['input.price', 'input.initPay', 'input.qiTax', 'input.originalValue',
+                          'input.yingYeTax', 'input.geTax', 'input.middleManFee',
+                          'input.normalHouse', 'input.overFiveYear'], function (field) {
             $scope.$watch(field, function () {
                var inputs = angular.copy($scope.input);
 
                if (!!inputs && inputs.price) {
+
+                  $scope.input.yingYeTax = inputs.yingYeTax = _doNotNeedYingYeTax(inputs.overFiveYear, inputs.normalHouse) ? 0 : 5.65;
+                  console.log(_doNotNeedYingYeTax(inputs.overFiveYear, inputs.normalHouse));
+
                   $scope.result = cal(inputs.price, inputs);
 
-                  if (inputs.cheating) {
-                     inputs.geTax = 1;
-                     $scope.cheating = cal(inputs.cheatingValue, inputs, inputs.cheating);
+                  if (inputs.normalHouse) {
+                     inputs.geTax = inputs.geTax > 0 ? 1 : 0; // 唯一房无需个税
+                     $scope.cheating = cal(inputs.normalHouseValue, inputs, inputs.normalHouse);
                   }
 
                }

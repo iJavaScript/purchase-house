@@ -9,6 +9,9 @@ angular.module('purchaseHouseApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+        .when('/help', {
+           templateUrl: 'views/help.html'
+        })
       .otherwise({
         redirectTo: '/'
       });

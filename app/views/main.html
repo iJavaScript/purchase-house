@@ -1,6 +1,6 @@
 <div class="pure-g-r">
 
-    <div class="pure-u-1-4">
+    <div class="pure-u-1-3">
         <form class="pure-form pure-form-aligned">
             <fieldset>
                 <div class="pure-control-group">
@@ -17,54 +17,57 @@
                     <label for="over-five-year">是否满五年?</label>
                     <input id="over-five-year" type="checkbox" ng-model="input.overFiveYear">
                 </div>
-
-                <!--
-                <div class="pure-control-group">
-                <label for="only-house">是否唯一</label>
-                <input id="only-house" type="checkbox" ng-model="input.onlyOneHouse">
+                <div class="pure-control-group" ng-show="needShowOriginalValue()">
+                    <label for="original-value" class="extra-info">买进价</label>
+                    <input id="original-value" type="number" ng-model="input.originalValue">
                 </div>
-                -->
+
 
                 <div class="pure-control-group">
-                    <label for="cheating">是否做低成普通住宅</label>
-                    <input id="cheating" type="checkbox" ng-model="input.cheating">
+                    <label for="only-house">是否唯一</label>
+                    <input id="only-house" type="checkbox" ng-model="input.onlyOneHouse">
                 </div>
 
                 <div class="pure-control-group">
-                    <label for="cheating-value"></label>
-                    <input id="cheating-value" type="number" readonly ng-model="input.cheatingValue" ng-disabled="!cheating">
+                    <label for="normalHouse">是否做低成普通住宅</label>
+                    <input id="normalHouse" type="checkbox" ng-model="input.normalHouse">
+                </div>
+
+                <div class="pure-control-group" ng-show="input.normalHouse">
+                    <label for="normalHouse-value" class="extra-info">做低房价</label>
+                    <input id="normalHouse-value" type="number" readonly ng-model="input.normalHouseValue">
                 </div>
 
                 <div class="pure-control-group">
                     <label for="init-pay">首付</label>
-                    <input id="init-pay" type="number" ng-model="input.initPay">
+                    <input id="init-pay" type="number" ng-model="input.initPay">%
                 </div>
 
                 <div class="pure-control-group">
                     <label for="qi-tax">契税</label>
-                    <input id="qi-tax" type="number" ng-model="input.qiTax">
+                    <input id="qi-tax" type="number" ng-model="input.qiTax">%
                 </div>
 
                 <div class="pure-control-group">
                     <label for="ying-ye-tax">营业税</label>
-                    <input id="ying-ye-tax" type="number" ng-model="input.yingYeTax">
+                    <input id="ying-ye-tax" type="number" ng-model="input.yingYeTax">%
                 </div>
 
                 <div class="pure-control-group">
                     <label for="ge-tax">个税</label>
-                    <input id="ge-tax" type="number" ng-model="input.geTax">
+                    <input id="ge-tax" type="number" ng-model="input.geTax">%
                 </div>
 
 
                 <div class="pure-control-group">
                     <label for="middle-man-fee">中介费</label>
-                    <input id="middle-man-fee" type="number" ng-model="input.middleManFee">
+                    <input id="middle-man-fee" type="number" ng-model="input.middleManFee">%
                 </div>
 
             </fieldset>
         </form>
     </div>
-    <div class="pure-u-1-4" ng-show="input.price">
+    <div class="pure-u-1-3" ng-show="input.price">
         <h2>非普通住宅</h2>
         <table class="pure-table pure-table-bordered">
             <thead>
@@ -82,13 +85,13 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>契税</td>
-                    <td>{{result.qiTax | naValue }}</td>
+                    <td>营业税</td>
+                    <td>{{result.yingYeTax | naValue }}</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>营业税</td>
-                    <td>{{result.yingYeTax | naValue }}</td>
+                    <td>契税</td>
+                    <td>{{result.qiTax | naValue }}</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -125,7 +128,7 @@
             </tbody>
         </table>
     </div>
-    <div class="pure-u-1-4" ng-show="input.cheating">
+    <div class="pure-u-1-3" ng-show="input.normalHouse">
         <h2>普通住宅</h2>
         <table class="pure-table pure-table-bordered">
             <thead>
@@ -148,13 +151,13 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>契税</td>
-                    <td>{{cheating.qiTax | naValue }}</td>
+                    <td>营业税</td>
+                    <td>{{cheating.yingYeTax | naValue }}</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>营业税</td>
-                    <td>{{cheating.yingYeTax | naValue }}</td>
+                    <td>契税</td>
+                    <td>{{cheating.qiTax | naValue }}</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -190,27 +193,6 @@
             </tbody>
         </table>
 
-    </div>
-
-    <div class="pure-u-1-4">
-        <h2>Help</h2>
-        <ul>
-            <li>价格单位: 万人民币</li>
-            <li>普通住宅: 价格<160</li>
-            <li>非普通住宅: 价格>160</li>
-            <li>营业税: 满五年普通住宅 0</li>
-            <li>营业税: 满五年非普通住宅, 差额 5.65</li>
-            <li>营业税  不满五年普通住宅 </li>
-            <li>营业税  不满五年非普通住宅 </li>
-            <li>唯一: 满五年 </li>
-            <li>唯一: 不满五年 </li>
-            <li>不唯一: 满五年 </li>
-            <li>不唯一: 不满五年 </li>
-            <li>个税: 普通住宅 1 </li>
-            <li>个税: 非普通住宅 2 </li>
-            <li>契税: 首套房 1</li>
-            <li>契税: 非首套房 3</li>
-        </ul>
     </div>
 
 </div>

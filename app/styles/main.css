@@ -1,7 +1,6 @@
 /* Space out content a bit */
 body {
-  padding-top: 40px;
-  padding-bottom: 20px;
+  padding: 40px 20px 20px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -26,4 +25,9 @@ body {
   padding-top: 19px;
   color: #777;
   border-top: 1px solid #e5e5e5;
+}
+
+.extra-info {
+  color: green;
+  font-weight: bold;
 }
