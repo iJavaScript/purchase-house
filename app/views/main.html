@@ -1,62 +1,63 @@
 <div class="pure-g-r">
 
-    <div class="pure-u-1-2">
+    <div class="pure-u-1-3">
         <form class="pure-form pure-form-aligned">
             <fieldset>
                 <div class="pure-control-group">
                     <label for="total">Total</label>
-                    <input id="total" type="number" placeholder="" ng-model="price">
+                    <input id="total" type="number" placeholder="" ng-model="input.price">
                 </div>
 
                 <div class="pure-control-group">
                     <label for="how-many-houses">第几套</label>
-                    <input id="how-many-houses" type="number" ng-model="howManyHouses">
-                </div>
-
-                <!-- <div class="pure-control-group">
-                <label for="over-five-year">是否满五年?</label>
-                <input id="over-five-year" type="checkbox" ng-model="overFiveYear">
+                    <input id="how-many-houses" type="number" ng-model="input.howManyHouses">
                 </div>
 
                 <div class="pure-control-group">
+                    <label for="over-five-year">是否满五年?</label>
+                    <input id="over-five-year" type="checkbox" ng-model="input.overFiveYear">
+                </div>
+
+                <!--
+                <div class="pure-control-group">
                 <label for="only-house">是否唯一</label>
-                <input id="only-house" type="checkbox" ng-model="onlyOneHouse">
+                <input id="only-house" type="checkbox" ng-model="input.onlyOneHouse">
                 </div>
 
                 <div class="pure-control-group">
                 <label for="cheating">是否做低</label>
-                <input id="cheating" type="checkbox" ng-model="cheating">
+                <input id="cheating" type="checkbox" ng-model="input.cheating">
                 </div>
 
                 <div class="pure-control-group">
                 <label for="cheating-value"></label>
-                <input id="cheating-value" type="number" disabled ng-model="cheatingValue" ng-disabled="!cheating">
+                <input id="cheating-value" type="number" disabled ng-model="input.cheatingValue" ng-disabled="!cheating">
                 </div> -->
 
                 <div class="pure-control-group">
                     <label for="init-pay">首付</label>
-                    <input id="init-pay" type="number" ng-model="initPay">
+                    <input id="init-pay" type="number" ng-model="input.initPay">
                 </div>
 
                 <div class="pure-control-group">
                     <label for="qi-tax">契税</label>
-                    <input id="qi-tax" type="number" ng-model="qiTax">
+                    <input id="qi-tax" type="number" ng-model="input.qiTax">
                 </div>
 
                 <div class="pure-control-group">
                     <label for="ying-ye-tax">营业税</label>
-                    <input id="ying-ye-tax" type="number" ng-model="yingYeTax">
+                    <input id="ying-ye-tax" type="number" ng-model="input.yingYeTax">
                 </div>
 
                 <div class="pure-control-group">
                     <label for="ge-tax">个税</label>
-                    <input id="ge-tax" type="number" ng-model="geTax">
+                    <input id="ge-tax" type="number" ng-model="input.geTax">
                 </div>
 
 
                 <div class="pure-control-group">
                     <label for="middle-man-fee">中介费</label>
-                    <input id="middle-man-fee" type="number" ng-model="middleManFee">
+                    <input id="middle-man-fee" type="number" ng-model="input.middleManFee">
                 </div>
 
                 <div class="pure-controls">
@@ -65,31 +66,68 @@
             </fieldset>
         </form>
     </div>
-    <div class="pure-u-1-2">
+    <div class="pure-u-2-3">
         <table class="pure-table pure-table-bordered">
             <thead>
                 <tr>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Year</th>
+                    <th></th>
+                    <th>Amount</th>
+                    <th></th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr>
-                    <td>1</td>
-                    <td>Honda</td>
-                    <td>Accord</td>
-                    <td>2009</td>
+                    <td>首付</td>
+                    <td>{{result.initPay | naValue }}</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>Toyota</td>
-                    <td>Camry</td>
-                    <td>2012</td>
+                    <td>契税</td>
+                    <td>{{result.qiTax | naValue }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>营业税</td>
+                    <td>{{result.yingYeTax | naValue }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>个税</td>
+                    <td>{{result.geTax | naValue }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>税费小计</td>
+                    <td></td>
+                    <td>{{result.taxSubTotal | naValue }}</td>
+                </tr>
+                <tr>
+                    <td>中介费</td>
+                    <td>{{result.middleManFee | naValue }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>总计</td>
+                    <td></td>
+                    <td>{{result.total | naValue }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
+</div>
+
+<div class="pure-g-r-aaaa">
+    <h2>Help</h2>
+    <ul>
+        <li>价格单位: 万人民币</li>
+        <li>满五年: 无需营业税</li>
+        <li>不满五年: 营业税5.65</li>
+        <li>不满五年普通住宅(<160): 差额营业税5.65</li>
+        <li>满五年唯一: </li>
+        <li>满五年不唯一: </li>
+        <li>个税: </li>
+        <li>契税</li>
+    </ul>
 </div>
