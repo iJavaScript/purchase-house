@@ -7,21 +7,26 @@
       "3": { qiTax : 3, initPay: 100 }
    };
 
-   function cal (price, inputs) {
+   function cal (price, inputs, cheating) {
       var subTotal = 0,
           result = {};
-      angular.forEach(['initPay', 'qiTax', 'yingYeTax', 'geTax', 'middleManFee'], function (type) {
-         result[type] = price * inputs[type] / 100;
+      angular.forEach(['initPay', 'qiTax', 'yingYeTax', 'geTax'], function (type) {
+         result[type] = (price * inputs[type] / 100);
+
          if (type.match(/Tax$/)) {
             subTotal += result[type];
          }
       });
 
+      result.middleManFee = inputs.price * inputs.middleManFee / 100;
+      result.diff = !!cheating ? (inputs.price - inputs.cheatingValue) : 0;
       result.taxSubTotal = subTotal;
-      result.total = result.initPay +
+      result.firstPayTotal = result.initPay +
          subTotal +
-         result.middleManFee;
-      result.load = inputs.price * (100 - inputs.initPay) / 100;
+         result.middleManFee +
+         result.diff;
+      result.load = price * (100 - inputs.initPay) / 100;
+      result.total = result.firstPayTotal + result.load;
 
       return result;
 
@@ -49,6 +54,7 @@
                $scope.input.initPay = d.initPay;
             }
          });
+
          $scope.$watch('input.overFiveYear', function () {
             //if ($scope.input && $scope.input.overFiveYear) {
             //   $scope.input.yingYeTax = 0;
@@ -57,27 +63,17 @@
             //}
          });
 
-         angular.forEach(['input.price', 'input.initPay', 'input.qiTax', 'input.yingYeTax', 'input.geTax', 'input.middleManFee'], function (field) {
+         angular.forEach(['input.price', 'input.initPay', 'input.qiTax', 'input.yingYeTax', 'input.geTax', 'input.middleManFee', 'input.cheating'], function (field) {
             $scope.$watch(field, function () {
-               var inputs = $scope.input;
-               //console.log($scope.input);
+               var inputs = angular.copy($scope.input);
 
-               if (!!inputs) {
-                  //var subTotal = 0;
-                  //angular.forEach(['initPay', 'qiTax', 'yingYeTax', 'geTax', 'middleManFee'], function (type) {
-                  //   $scope.result[type] = inputs.price * inputs[type] / 100;
-                  //   if (type.match(/Tax$/)) {
-                  //      subTotal += $scope.result[type];
-                  //   }
-                  //});
-                  //
-                  //$scope.result.taxSubTotal = subTotal;
-                  //$scope.result.total = $scope.result.initPay +
-                  //                      subTotal +
-                  //                      $scope.result.middleManFee;
-                  //$scope.result.load = inputs.price * (100 - inputs.initPay) / 100;
-
+               if (!!inputs && inputs.price) {
                   $scope.result = cal(inputs.price, inputs);
+
+                  if (inputs.cheating) {
+                     inputs.geTax = 1;
+                     $scope.cheating = cal(inputs.cheatingValue, inputs, inputs.cheating);
+                  }
 
                }
             });

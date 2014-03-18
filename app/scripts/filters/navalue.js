@@ -3,6 +3,6 @@
 angular.module('purchaseHouseApp')
   .filter('naValue', function () {
     return function (input) {
-      return !!input ? input : '-';
+      return !!input ? input.toFixed(2) : '-';
     };
   });
