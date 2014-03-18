@@ -107,7 +107,6 @@
 
 
             result.subTotal = subTotal;
-            console.log(result);
          };
 
       });
