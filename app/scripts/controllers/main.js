@@ -45,6 +45,20 @@
       return overFiveYear && !normalHouse;
    }
 
+   function _getGeTax (overFiveYear, onlyOneHouse) {
+      var r = 2;
+      if (overFiveYear && onlyOneHouse) {
+         r = 0;
+      } else if (overFiveYear && !onlyOneHouse) {
+         r = 1;
+      }
+      return r;
+   }
+
+   function _updateGeTax ($scope) {
+      $scope.input.geTax = _getGeTax($scope.input.overFiveYear, $scope.input.onlyOneHouse);
+   }
+
    angular.module('purchaseHouseApp')
       .controller('MainCtrl', function ($scope) {
 
@@ -73,12 +87,16 @@
          });
 
          $scope.$watch('input.onlyOneHouse', function () {
-            $scope.input.geTax = $scope.input.onlyOneHouse ? 0 : 2;
+            _updateGeTax($scope);
+
+         });
+         $scope.$watch('input.overFiveYear', function () {
+            _updateGeTax($scope);
          });
 
          angular.forEach(['input.price', 'input.initPay', 'input.qiTax', 'input.originalValue',
                           'input.yingYeTax', 'input.geTax', 'input.middleManFee',
-                          'input.normalHouse', 'input.overFiveYear'], function (field) {
+                          'input.normalHouseValue', 'input.normalHouse'], function (field) {
             $scope.$watch(field, function () {
                var inputs = angular.copy($scope.input);
 
