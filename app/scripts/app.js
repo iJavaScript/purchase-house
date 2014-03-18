@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('purchaseHouseApp', [
-  'ngRoute'
+   'ngRoute'
 ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-        .when('/help', {
-           templateUrl: 'views/help.html'
-        })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+   .config(function ($routeProvider) {
+      $routeProvider
+         .when('/', {
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl'
+         })
+         .when('/help', {
+            templateUrl: 'views/help.html'
+         })
+         .otherwise({
+            redirectTo: '/'
+         });
+   });

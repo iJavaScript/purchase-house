@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('purchaseHouseApp')
-  .filter('naValue', function () {
-    return function (input) {
-      return !!input ? input.toFixed(2) : '-';
-    };
-  });
+   .filter('naValue', function () {
+      return function (input) {
+         return !!input ? input.toFixed(2) : '-';
+      };
+   });

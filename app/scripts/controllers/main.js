@@ -2,9 +2,9 @@
    'use strict';
 
    var taxData = {
-      "1": { qiTax : 1, initPay: 30 },
-      "2": { qiTax : 3, initPay: 70 },
-      "3": { qiTax : 3, initPay: 100 }
+      '1': { qiTax : 1, initPay: 30 },
+      '2': { qiTax : 3, initPay: 70 },
+      '3': { qiTax : 3, initPay: 100 }
    };
 
    function cal (price, inputs, normalHouse) {
@@ -80,7 +80,9 @@
          $scope.$watch('input.howManyHouses', function () {
             if ($scope.input && $scope.input.howManyHouses) {
                var d = taxData[''+$scope.input.howManyHouses];
-               !!d || (d = taxData['3']);
+               if (!d) {
+                  d = taxData['3'];
+               }
                $scope.input.qiTax = d.qiTax;
                $scope.input.initPay = d.initPay;
             }
