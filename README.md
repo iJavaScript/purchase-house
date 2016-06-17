@@ -1,4 +1,4 @@
-<http://freizl.github.io/purchase-house/>
+<http://freizl.github.io/apps/purchase-house/>
 
 # notes
 
